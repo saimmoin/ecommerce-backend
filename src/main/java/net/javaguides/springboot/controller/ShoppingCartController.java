@@ -53,4 +53,9 @@ public class ShoppingCartController {
         return shoppingCartService.addShoppingCart(addShoppingCartDTO);
     }
 
+    @GetMapping("/shoppingCarts/delete/{id}")
+    public String deleteShoppingCart(@PathVariable Long id) {
+        return shoppingCartService.deleteShoppingCart(id);
+    }
+
 }

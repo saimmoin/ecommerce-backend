@@ -37,9 +37,9 @@ public class Payments {
         this.paidAt = paidAt;
     }
 
-    @ManyToOne
-    @JoinColumn(name="order_id", insertable = false, updatable = false)
-    private Orders orderInfo;
+//    @ManyToOne
+//    @JoinColumn(name="order_id", insertable = false, updatable = false)
+//    private Orders orderInfo;
 
 
 }

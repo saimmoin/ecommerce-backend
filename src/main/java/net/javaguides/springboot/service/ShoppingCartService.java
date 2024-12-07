@@ -41,6 +41,8 @@ public class ShoppingCartService {
         shoppingCart.setQuantity(addShoppingCartDTO.getQuantity());
         shoppingCart.setUserId(addShoppingCartDTO.getUserId());
         shoppingCart.setProductId(addShoppingCartDTO.getProductId());
+        shoppingCart.setPrice(addShoppingCartDTO.getPrice());
+        shoppingCart.setProductName(addShoppingCartDTO.getProductName());
 
         shoppingCartRepository.save(shoppingCart);
         return "Shopping Cart saved successfully!";
@@ -59,4 +61,15 @@ public class ShoppingCartService {
         return "Shopping cart updated successfully!";
     }
 
+    public String deleteShoppingCart(Long id){
+        try {
+            ShoppingCart shoppingCart = shoppingCartRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Shopping cart not exist with id :" + id));
+
+            shoppingCartRepository.delete(shoppingCart);
+            return "Item removed successfully!";
+        } catch (Exception e) {
+            return "Unable remove item";
+        }
+    }
 }

@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -15,6 +16,7 @@ import java.util.Date;
 
 public class Orders {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long orderId;
 
     @Column(name = "user_id")
@@ -38,4 +40,7 @@ public class Orders {
     @ManyToOne
     @JoinColumn(name="user_id", insertable = false, updatable = false)
     private Users userInfo;
+
+    @OneToMany(mappedBy = "orderInfo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItems> orderItems; // One-to-Many relationship
 }

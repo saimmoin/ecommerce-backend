@@ -7,6 +7,8 @@ import java.util.Map;
 import jakarta.persistence.criteria.Order;
 import net.javaguides.springboot.dtos.AddOrderDTO;
 import net.javaguides.springboot.dtos.AddUserDTO;
+import net.javaguides.springboot.dtos.OrderListDTO;
+import net.javaguides.springboot.dtos.OrderRequest;
 import net.javaguides.springboot.model.Orders;
 import net.javaguides.springboot.model.Products;
 import net.javaguides.springboot.model.ShoppingCart;
@@ -36,7 +38,7 @@ public class OrdersController {
     private OrdersService ordersService;
 
     @GetMapping("/orders")
-    public List<Orders> getAllOrders() {
+    public List<OrderListDTO> getAllOrders() {
 
         return ordersService.getAllOrders();
     }
@@ -49,6 +51,13 @@ public class OrdersController {
     @PostMapping("/orders/add")
     public String addOrder(@RequestBody AddOrderDTO addOrderDTO) {
         return ordersService.addOrder(addOrderDTO);
+    }
+
+
+    @PostMapping("/orders/save")
+    public ResponseEntity<String> saveOrderWithOrderItems(@RequestBody OrderRequest orderRequest)
+    {
+        return ordersService.saveOrderWithOrderItems(orderRequest);
     }
 
 }

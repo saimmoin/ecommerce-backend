@@ -14,6 +14,7 @@ import java.util.Date;
 @Table(name = "orderitems")
 public class OrderItems {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long orderItemId;
 
     @Column(name = "order_id")
