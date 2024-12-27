@@ -1,4 +1,5 @@
 package net.javaguides.springboot.model;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -39,6 +40,7 @@ public class OrderItems {
 
     @ManyToOne
     @JoinColumn(name="order_id", insertable = false, updatable = false)
+    @JsonBackReference
     private Orders orderInfo;
 
     @ManyToOne

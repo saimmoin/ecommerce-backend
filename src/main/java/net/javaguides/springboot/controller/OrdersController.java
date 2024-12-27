@@ -5,10 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import jakarta.persistence.criteria.Order;
-import net.javaguides.springboot.dtos.AddOrderDTO;
-import net.javaguides.springboot.dtos.AddUserDTO;
-import net.javaguides.springboot.dtos.OrderListDTO;
-import net.javaguides.springboot.dtos.OrderRequest;
+import net.javaguides.springboot.dtos.*;
 import net.javaguides.springboot.model.Orders;
 import net.javaguides.springboot.model.Products;
 import net.javaguides.springboot.model.ShoppingCart;
@@ -58,6 +55,10 @@ public class OrdersController {
     public ResponseEntity<String> saveOrderWithOrderItems(@RequestBody OrderRequest orderRequest)
     {
         return ordersService.saveOrderWithOrderItems(orderRequest);
+    }
+    @PostMapping("/orders/update")
+    public String updateOrder(@RequestBody UpdateOrderDTO updateOrderDTO) {
+        return ordersService.updateOrder(updateOrderDTO);
     }
 
 }

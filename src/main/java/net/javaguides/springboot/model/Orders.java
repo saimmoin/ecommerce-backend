@@ -1,4 +1,5 @@
 package net.javaguides.springboot.model;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,7 @@ public class Orders {
     private BigDecimal totalAmount;
     private String status;
     private Date createdAt;
+    private String remarks;
 
     public Orders() {
     }
@@ -42,5 +44,6 @@ public class Orders {
     private Users userInfo;
 
     @OneToMany(mappedBy = "orderInfo", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<OrderItems> orderItems; // One-to-Many relationship
 }

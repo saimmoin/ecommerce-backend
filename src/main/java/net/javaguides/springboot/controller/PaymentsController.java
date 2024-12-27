@@ -6,6 +6,8 @@ import java.util.Map;
 
 import net.javaguides.springboot.dtos.AddPaymentDTO;
 import net.javaguides.springboot.dtos.AddUserDTO;
+import net.javaguides.springboot.dtos.PaymentsListDTO;
+import net.javaguides.springboot.dtos.UpdatePaymentDTO;
 import net.javaguides.springboot.model.Payments;
 import net.javaguides.springboot.model.Products;
 import net.javaguides.springboot.model.ShoppingCart;
@@ -35,7 +37,7 @@ public class PaymentsController {
     private PaymentsService paymentsService;
 
     @GetMapping("/payments")
-    public List<Payments> getAllPayments() {
+    public List<PaymentsListDTO> getAllPayments() {
 
         return paymentsService.getAllPayments();
     }
@@ -48,6 +50,11 @@ public class PaymentsController {
     @PostMapping("/payments/add")
     public String addPayment(@RequestBody AddPaymentDTO addPaymentDTO) {
         return paymentsService.addPayment(addPaymentDTO);
+    }
+
+    @PostMapping("/payments/update")
+    public String updatePayment(@RequestBody UpdatePaymentDTO updatePaymentDTO) {
+        return paymentsService.updatePayment(updatePaymentDTO);
     }
 
 }

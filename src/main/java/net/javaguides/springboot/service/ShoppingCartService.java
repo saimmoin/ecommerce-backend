@@ -72,4 +72,13 @@ public class ShoppingCartService {
             return "Unable remove item";
         }
     }
+    public String emptyCart() {
+        try {
+            shoppingCartRepository.deleteAll();
+            return "All items removed successfully!";
+        } catch (Exception e) {
+            return "Unable to remove items";
+        }
+    }
+
 }

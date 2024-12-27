@@ -1,34 +1,49 @@
 package net.javaguides.springboot.service;
 
-import net.javaguides.springboot.dtos.AddPaymentDTO;
-import net.javaguides.springboot.dtos.AddUserDTO;
+import net.javaguides.springboot.dtos.*;
 import net.javaguides.springboot.exception.ResourceNotFoundException;
+import net.javaguides.springboot.model.OrderItems;
 import net.javaguides.springboot.model.Payments;
 import net.javaguides.springboot.model.Products;
-import net.javaguides.springboot.model.Users;
-import net.javaguides.springboot.repository.EmployeeRepository;
-import net.javaguides.springboot.repository.PaymentsRepository;
-import net.javaguides.springboot.repository.ProductsRepository;
-import net.javaguides.springboot.repository.UsersRepository;
-import org.apache.catalina.User;
+import net.javaguides.springboot.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PaymentsService {
+    private final PaymentsRepository paymentsRepository;
+    private final OrderItemsRepository orderItemsRepository;
+
+    private final ProductsRepository productsRepository;
+
     @Autowired
-    private PaymentsRepository paymentsRepository;
+    public PaymentsService(PaymentsRepository paymentsRepository, OrderItemsRepository orderItemsRepository,ProductsRepository productsRepository) {
+        this.paymentsRepository = paymentsRepository;
+        this.orderItemsRepository = orderItemsRepository;
+        this.productsRepository = productsRepository;
+    }
 
-    public List<Payments> getAllPayments(){
+    public List<PaymentsListDTO> getAllPayments(){
 
-        return paymentsRepository.findAll();
+        List<Payments> payments = paymentsRepository.findAll();
+
+        // Map the orders to OrderListDTO and return the list
+        return payments.stream().map(payment -> {
+           PaymentsListDTO dto = new PaymentsListDTO();
+            dto.setPaymentId(payment.getPaymentId());
+            dto.setOrderId(payment.getOrderId());
+            dto.setAmount(payment.getAmount());
+            dto.setPaymentMethod(payment.getPaymentMethod());
+            dto.setStatus(payment.getStatus());
+            dto.setPaidAt(payment.getPaidAt());
+            return dto;
+        }).collect(Collectors.toList());
     }
 
     public ResponseEntity<Payments> getPaymentById(@PathVariable Long id) {
@@ -47,6 +62,42 @@ public class PaymentsService {
 
         paymentsRepository.save(payments);
         return "Payment saved successfully!";
+    }
+
+    public String updatePayment(UpdatePaymentDTO updatePaymentDTO) {
+        Optional<Payments> payments = paymentsRepository.findById(updatePaymentDTO.getPaymentId());
+
+        Payments payment = payments.get();
+
+        if(payment.getAmount().equals(updatePaymentDTO.getAmountReceived())){
+            payment.setStatus("completed");
+
+            List<OrderItems> orderItemsList = orderItemsRepository.findByOrderId(payment.getOrderId());
+
+            for(OrderItems orderItems : orderItemsList){
+
+                Optional<Products> products = productsRepository.findById(orderItems.getProductId().longValue());
+                Products product = products.get();
+
+                Integer oldStock = product.getStock();
+
+
+                product.setStock(oldStock - orderItems.getQuantity());
+
+                productsRepository.save(product);
+
+            }
+
+
+            return "Payment Successful";
+        }
+
+        else{
+            payment.setStatus("failed");
+            paymentsRepository.save(payment);
+            return "Payment Failed";
+        }
+
     }
 
 }

@@ -58,4 +58,9 @@ public class ShoppingCartController {
         return shoppingCartService.deleteShoppingCart(id);
     }
 
+    @GetMapping("/shoppingCarts/emptyCart")
+    public String emptyCart(){
+        return shoppingCartService.emptyCart();
+    }
+
 }
