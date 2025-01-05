@@ -14,9 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Service
 public class UsersService {
@@ -58,6 +57,26 @@ public class UsersService {
 
         usersRepository.save(users);
         return "User updated successfully!";
+    }
+
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    public String registerUser(Users user) {
+        if (usersRepository.findByEmail(user.getEmail()).isPresent()) {
+            return "Email already exists!";
+        }
+        user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
+        user.setCreatedAt(new Date());
+        usersRepository.save(user);
+        return "User registered successfully!";
+    }
+
+    public String loginUser(Users user) {
+        Optional<Users> existingUser = usersRepository.findByEmail(user.getEmail());
+        if (existingUser.isPresent() && passwordEncoder.matches(user.getPasswordHash(), existingUser.get().getPasswordHash())) {
+            return "Login successful!";
+        }
+        return "Invalid email or password";
     }
 
 }

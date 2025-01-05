@@ -50,4 +50,22 @@ public class UsersController {
         return usersService.addUser(addUserDTO);
     }
 
+    @PostMapping("/register")
+    public ResponseEntity<String> registerUser(@RequestBody Users user) {
+        String response = usersService.registerUser(user);
+        if (response.equals("User registered successfully!")) {
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.badRequest().body(response);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> loginUser(@RequestBody Users user) {
+        String response = usersService.loginUser(user);
+        if (response.equals("Login successful!")) {
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.badRequest().body(response);
+    }
+
 }
