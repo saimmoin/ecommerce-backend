@@ -57,4 +57,14 @@ public class PaymentsController {
         return paymentsService.updatePayment(updatePaymentDTO);
     }
 
+    @GetMapping("/byOrderId/{orderId}")
+    public ResponseEntity<Long> getPaymentIdByOrderId(@PathVariable Integer orderId) {
+        Long paymentId = paymentsService.getPaymentIdByOrderId(orderId);
+        if (paymentId != null) {
+            return ResponseEntity.ok(paymentId);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

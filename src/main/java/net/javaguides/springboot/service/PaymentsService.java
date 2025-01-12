@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -69,7 +70,13 @@ public class PaymentsService {
 
         Payments payment = payments.get();
 
-        if(payment.getAmount().equals(updatePaymentDTO.getAmountReceived())){
+        BigDecimal paymentAmount = payment.getAmount();
+        BigDecimal amountReceived = updatePaymentDTO.getAmountReceived();
+
+
+
+        if( paymentAmount.setScale(2, BigDecimal.ROUND_HALF_UP)
+                .compareTo(amountReceived.setScale(2, BigDecimal.ROUND_HALF_UP)) == 0){
             payment.setStatus("completed");
 
             List<OrderItems> orderItemsList = orderItemsRepository.findByOrderId(payment.getOrderId());
@@ -98,6 +105,11 @@ public class PaymentsService {
             return "Payment Failed";
         }
 
+    }
+
+    public Long getPaymentIdByOrderId(Integer orderId) {
+        Optional<Payments> payment = paymentsRepository.findByOrderId(orderId);
+        return payment.map(Payments::getPaymentId).orElse(null);
     }
 
 }
